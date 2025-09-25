@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     reglamento,
     lineamientos,
     fechasParciales,
-    porcentajesParcial
+    porcentajesParcial,
   );
 
   const bttreg = document.getElementById("btt-reg");

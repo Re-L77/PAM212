@@ -18,7 +18,7 @@ export default function HomeScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Skibdi!!!</ThemedText>
+        <ThemedText type="title">Skibidi sigma toilet</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
