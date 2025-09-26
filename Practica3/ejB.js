@@ -1,3 +1,4 @@
+//Ejercicio B
 function verificarUsuario(usuario) {
     return new Promise ((resolve, reject) => {
         if (usuario == "admin") {
