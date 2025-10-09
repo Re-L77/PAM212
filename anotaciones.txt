@@ -1,0 +1,14 @@
+Componentes
+
+Elementos del Framework que podemos crear y reutilizar para construir las interfaces
+de nuestras aplicaciones móviles.
+- Principales
+- Nativos
+- Comunidad: NativeBase, Shoutem, RN Material UI
+
+Core Components
+<View>
+<Text>
+<Image>
+<ScrollView>
+<TextInput>
