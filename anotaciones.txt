@@ -2,13 +2,39 @@ Componentes
 
 Elementos del Framework que podemos crear y reutilizar para construir las interfaces
 de nuestras aplicaciones móviles.
-- Principales
-- Nativos
-- Comunidad: NativeBase, Shoutem, RN Material UI
+  - Principales
+  - Nativos
+  - Comunidad: NativeBase, Shoutem, RN Material UI
 
 Core Components
-<View>
-<Text>
-<Image>
-<ScrollView>
-<TextInput>
+  <View>
+  <Text>
+  <Image>
+  <ScrollView>
+  <TextInput>
+
+Props
+Son valores que se pasan a los componentes para configurarlos. Son como los parámetros de una
+función
+
+    <Button title="Incrementar" onPress= />
+
+Hooks
+Los hooks son funciones especiales que React proporciona para que puedas "engancharte" al sistema
+de React desde componentes funcionales.
+
+Permiten usar estados, ciclos de vida y otras funcionalidades de React en componentes funcionalidades, 
+sin tener que escribir clases. 
+
+
+useState
+
+Es un hook de React que asignara una variable de estado, con la cual crearemos y manejaremos un estado
+dentro de un componente funcional.
+
+Se compone de 2 de elementos.
+  1.- Variable: valor inicial.
+  2.- Función: encargada del cambio de estado.
+
+
+
