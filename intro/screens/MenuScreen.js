@@ -31,7 +31,7 @@ export default function MenuScreen() {
       return <BottomSheet />;
     default:
       return (
-        <View>
+        <View style={styles.container}>
           <Text>Menú Practicas</Text>
           <Button
             onPress={() => setScreen("contador")}
@@ -71,4 +71,9 @@ export default function MenuScreen() {
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    margin: "10px",
+  },
+});
