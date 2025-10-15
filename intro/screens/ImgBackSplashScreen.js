@@ -1,20 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  Animated,
-  StyleSheet,
-  Dimensions,
-  Image,
-} from "react-native";
+import { View, Text, Animated, StyleSheet, Dimensions } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
+import { Button } from "react-native-web";
 
 SplashScreen.preventAutoHideAsync();
 
 const { width, height } = Dimensions.get("window");
 
 export default function SplashScreenPro() {
-  const [showMain, setShowMain] = useState(false); // controla la pantalla principal
+  const [showMain, setShowMain] = useState(true); // controla la pantalla principal
 
   // Animaciones Splash
   const fadeLogo = useRef(new Animated.Value(0)).current;
