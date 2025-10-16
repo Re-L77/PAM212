@@ -74,6 +74,8 @@ export default function MenuScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
   },
 });
