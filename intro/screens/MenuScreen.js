@@ -2,7 +2,7 @@ import { Text, StyleSheet, View } from "react-native";
 import { useState } from "react";
 import ContadorScreen from "./ContadorScreen";
 import BotonesScreen from "./BotonesScreen";
-import InputAlert from "./InputAlert";
+import TextScreen from "./TextScreen";
 import ImgBackSplashScreen from "./ImgBackSplashScreen";
 import ScrollView from "./ScrollView";
 import Activity_Indicator from "./Activity_Indicator";
@@ -19,7 +19,7 @@ export default function MenuScreen() {
     case "botones":
       return <BotonesScreen />;
     case "input":
-      return <InputAlert />;
+      return <TextScreen />;
     case "imageBack":
       return <ImgBackSplashScreen />;
     case "scroll":
