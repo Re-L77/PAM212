@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native-web";
+import { ScrollView, Text, View, StyleSheet } from "react-native";
 
 const DATA = [
   { id: 1 },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flexDirection: "row",
     width: "100%",
-    height: "100vh",
+    height: "100%",
   },
   container: {
     width: "50%",

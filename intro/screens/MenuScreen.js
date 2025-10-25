@@ -4,12 +4,12 @@ import ContadorScreen from "./ContadorScreen";
 import BotonesScreen from "./BotonesScreen";
 import TextScreen from "./TextScreen";
 import ImgBackSplashScreen from "./ImgBackSplashScreen";
-import ScrollViewHorizontalScreen from "./ScrollView";
+import SimpleScrollView from "./ScrollView";
 import Activity_Indicator from "./Activity_Indicator";
 import FlatlistSectionList from "./FlatlistSectionList";
 import Modal from "./Modal";
 import BottomSheet from "./BottomSheet";
-import { Button } from "react-native-web";
+import { Button } from "react-native";
 
 export default function MenuScreen() {
   const [screen, setScreen] = useState("menu");
@@ -23,7 +23,7 @@ export default function MenuScreen() {
     case "imageBack":
       return <ImgBackSplashScreen />;
     case "scroll":
-      return <ScrollViewHorizontalScreen />;
+      return <SimpleScrollView />;
     case "activity":
       return <Activity_Indicator />;
     case "flatlist":
