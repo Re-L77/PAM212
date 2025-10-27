@@ -25,19 +25,16 @@ export default function Home() {
     if (!nombre || !email) {
       const mensaje = "Por favor completa todos los campos";
       Alert.alert("Error", mensaje);
-      if (typeof window !== "undefined") alert(mensaje);
       return;
     }
     if (!aceptarTerminos) {
       const mensaje = "Debes aceptar los términos y condiciones";
       Alert.alert("Términos no aceptados", mensaje);
-      if (typeof window !== "undefined") alert(mensaje);
       return;
     }
     console.log({ nombre, email, aceptarTerminos });
     const mensaje = `Registro exitoso\nNombre: ${nombre}\nEmail: ${email}`;
     Alert.alert("Registro exitoso", `Nombre: ${nombre}\nEmail: ${email}`);
-    if (typeof window !== "undefined") alert(mensaje);
   };
 
   return (
