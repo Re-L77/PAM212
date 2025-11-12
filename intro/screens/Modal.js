@@ -1,9 +1,37 @@
-import { Text, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { Modal, View, Text, Button, StyleSheet } from "react-native";
 
-export default function Modal() {
+export default function ModalScreen() {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const abrirModal = () => {
+    setModalVisible(true);
+  };
+
+  const cerrarModal = () => {
+    setModalVisible(false);
+  };
+
   return (
-    <View>
-      <Text>Modal: Proximamente...</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Ejemplo del componente Modal</Text>
+
+      <Button title="Abrir Modal" onPress={abrirModal} />
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={cerrarModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>¡Hola! Este es un Modal.</Text>
+            <Button title="Cerrar" onPress={cerrarModal} />{" "}
+            {/* PROP onPress: cierra modal */}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
