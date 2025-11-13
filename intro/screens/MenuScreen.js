@@ -8,7 +8,7 @@ import SimpleScrollView from "./ScrollView";
 import Activity_Indicator from "./Activity_Indicator";
 import FlatlistSectionList from "./FlatlistSectionList";
 import ModalScreen from "./Modal";
-import BottomSheet from "./BottomSheet";
+import BottomSheetScreen from "./BottomSheet";
 import { Button } from "react-native";
 
 export default function MenuScreen() {
@@ -31,7 +31,7 @@ export default function MenuScreen() {
     case "modal":
       return <ModalScreen />;
     case "bottom":
-      return <BottomSheet />;
+      return <BottomSheetScreen />;
     default:
       return (
         <View style={styles.container}>
