@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, ActivityIndicator, Platform, Modal } from 'react-native';
 import { UsuarioController } from '../controllers/UsuarioController'
 const controller = new UsuarioController();
 export default function InsertUsuarioScreen() {
@@ -8,6 +8,9 @@ export default function InsertUsuarioScreen() {
     const [nombre, setNombre] = useState('');
     const [loading, setLoading] = useState(true);
     const [guardando, setGuardando] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [usuarioEditando, setUsuarioEditando] = useState(null);
+    const [nombreEditar, setNombreEditar] = useState('');
 
     const cargarUsuarios = useCallback(async () => {
         try {
@@ -47,6 +50,74 @@ export default function InsertUsuarioScreen() {
         }
     }
 
+    const handleEliminar = (id, nombre) => {
+        if (Platform.OS === 'web') {
+            const confirmar = confirm(`¿Deseas eliminar a ${nombre}?`);
+            if (confirmar) {
+                (async () => {
+                    try {
+                        setGuardando(true);
+                        await controller.eliminarUsuario(id);
+                        alert('Éxito', `${nombre} ha sido eliminado`);
+                    } catch (error) {
+                        alert('Error', error.message);
+                    } finally {
+                        setGuardando(false);
+                    }
+                })();
+            }
+            return;
+        }
+        Alert.alert(
+            'Eliminar usuario',
+            `¿Deseas eliminar a ${nombre}?`,
+            [
+                { text: 'Cancelar', onPress: () => { }, style: 'cancel' },
+                {
+                    text: 'Eliminar',
+                    onPress: async () => {
+                        try {
+                            setGuardando(true);
+                            await controller.eliminarUsuario(id);
+                            Alert.alert('Éxito', `${nombre} ha sido eliminado`);
+                        } catch (error) {
+                            Alert.alert('Error', error.message);
+                        } finally {
+                            setGuardando(false);
+                        }
+                    },
+                    style: 'destructive'
+                }
+            ]
+        );
+    }
+    const handleEditar = (id, nombreActual) => {
+        setUsuarioEditando(id);
+        setNombreEditar(nombreActual);
+        setModalVisible(true);
+    }
+
+    const handleActualizarUsuario = async () => {
+        try {
+            setGuardando(true);
+            await controller.actualizarUsuario(usuarioEditando, nombreEditar);
+            Alert.alert('Éxito', 'Usuario actualizado correctamente');
+            setModalVisible(false);
+            setUsuarioEditando(null);
+            setNombreEditar('');
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        } finally {
+            setGuardando(false);
+        }
+    }
+
+    const cerrarModal = () => {
+        setModalVisible(false);
+        setUsuarioEditando(null);
+        setNombreEditar('');
+    }
+
     const renderUsuario = ({ item, index }) => {
         return (
             <View style={styles.userItem}>
@@ -57,6 +128,22 @@ export default function InsertUsuarioScreen() {
                     <Text style={styles.userName}>{item.nombre}</Text>
                     <Text style={styles.userId}>ID: {item.id}</Text>
                     <Text style={styles.userDate}>{new Date(item.fecha_creacion).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}</Text>
+                </View>
+                <View style={styles.buttonsContainer}>
+                    <TouchableOpacity
+                        style={styles.buttonDelete}
+                        onPress={() => handleEliminar(item.id, item.nombre)}>
+                        <Text style={styles.buttonText}>
+                            Eliminar
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.buttonEdit}
+                        onPress={() => handleEditar(item.id, item.nombre)}>
+                        <Text style={styles.buttonText}>
+                            Editar
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -141,6 +228,47 @@ export default function InsertUsuarioScreen() {
 
             </View>
 
+            {/* Modal para editar usuario */}
+            <Modal
+                visible={modalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={cerrarModal}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Editar Usuario</Text>
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nombre del usuario"
+                            value={nombreEditar}
+                            onChangeText={setNombreEditar}
+                            editable={!guardando}
+                        />
+
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={[styles.modalButtonCancel]}
+                                onPress={cerrarModal}
+                                disabled={guardando}
+                            >
+                                <Text style={styles.modalButtonText}>Cancelar</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.modalButtonSave, guardando && styles.buttonDisabled]}
+                                onPress={handleActualizarUsuario}
+                                disabled={guardando}
+                            >
+                                <Text style={styles.modalButtonText}>
+                                    {guardando ? 'Guardando...' : 'Guardar'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
         </View>
     );
@@ -152,7 +280,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
-        paddingTop: 50,
+        paddingTop: 40,
     },
     title: {
         fontSize: 28,
@@ -169,9 +297,9 @@ const styles = StyleSheet.create({
     },
     insertSection: {
         backgroundColor: '#fff',
-        padding: 20,
-        marginHorizontal: 15,
-        marginBottom: 15,
+        padding: 16,
+        marginHorizontal: 12,
+        marginBottom: 12,
         borderRadius: 12,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -182,10 +310,10 @@ const styles = StyleSheet.create({
     selectSection: {
         flex: 1,
         backgroundColor: '#fff',
-        marginHorizontal: 15,
-        marginBottom: 15,
+        marginHorizontal: 12,
+        marginBottom: 12,
         borderRadius: 12,
-        padding: 15,
+        padding: 12,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
@@ -193,10 +321,10 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     sectionTitle: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         color: '#333',
-        marginBottom: 15,
+        marginBottom: 12,
     },
     input: {
         borderWidth: 1,
@@ -218,8 +346,29 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 13,
         fontWeight: '600',
+    },
+    buttonDelete: {
+        backgroundColor: '#FF3B30',
+        padding: 8,
+        borderRadius: 6,
+        alignItems: 'center',
+        paddingHorizontal: 14,
+    },
+    buttonEdit: {
+        backgroundColor: '#007AFF',
+        padding: 8,
+        borderRadius: 6,
+        alignItems: 'center',
+        paddingHorizontal: 14,
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: 8,
+        flexShrink: 0,
     },
     selectHeader: {
         flexDirection: 'row',
@@ -248,43 +397,46 @@ const styles = StyleSheet.create({
     userItem: {
         flexDirection: 'row',
         backgroundColor: '#f9f9f9',
-        padding: 15,
+        padding: 12,
         borderRadius: 8,
         marginBottom: 10,
         borderLeftWidth: 4,
         borderLeftColor: '#007AFF',
+        alignItems: 'flex-start',
     },
     userNumber: {
-        width: 35,
-        height: 35,
-        borderRadius: 17.5,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
         backgroundColor: '#007AFF',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 12,
+        marginRight: 10,
+        marginTop: 2,
+        flexShrink: 0,
     },
     userNumberText: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 14,
+        fontSize: 13,
     },
     userInfo: {
         flex: 1,
     },
     userName: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: '600',
         color: '#333',
-        marginBottom: 4,
-    },
-    userId: {
-        fontSize: 12,
-        color: '#007AFF',
         marginBottom: 2,
     },
+    userId: {
+        fontSize: 11,
+        color: '#007AFF',
+        marginBottom: 1,
+    },
     userDate: {
-        fontSize: 12,
-        color: '#666',
+        fontSize: 11,
+        color: '#999',
     },
     emptyContainer: {
         alignItems: 'center',
@@ -327,4 +479,54 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#1976D2',
     },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 20,
+        width: '85%',
+        maxWidth: 400,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 10,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 16,
+        textAlign: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        gap: 10,
+        marginTop: 16,
+    },
+    modalButtonCancel: {
+        flex: 1,
+        backgroundColor: '#ccc',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    modalButtonSave: {
+        flex: 1,
+        backgroundColor: '#007AFF',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    modalButtonText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '600',
+    },
+
 });

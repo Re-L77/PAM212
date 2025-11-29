@@ -1,8 +1,8 @@
 export class Usuario {
-    constructor(id, nombre, fechaCreacion) {
+    constructor(id, nombre, fecha_creacion) {
         this.id = id;
         this.nombre = nombre;
-        this.fechaCreacion = fechaCreacion || new Date().toISOString();
+        this.fecha_creacion = fecha_creacion || new Date().toISOString();
     }
 
     static validar(nombre) {
